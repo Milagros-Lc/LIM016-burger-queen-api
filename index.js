@@ -8,8 +8,10 @@ const pkg = require('./package.json');
 const { port, dbUrl, secret } = config;
 const app = express();
 
-// TODO: Conexión a la Base de Datos (MongoDB o MySQL)
+// eslint-disable-next-line import/extensions
+require('./database.js');
 
+// TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 app.set('config', config);
 app.set('pkg', pkg);
 
@@ -17,7 +19,6 @@ app.set('pkg', pkg);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(authMiddleware(secret));
-
 // Registrar rutas
 routes(app, (err) => {
   if (err) {

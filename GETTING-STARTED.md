@@ -439,7 +439,7 @@ modernas como [Prisma](https://www.prisma.io/).
 
 ## 10. Definir estrategia de pruebas unitarias
 
-Además de las pruebas `e2e` que ya incluye el _boilerplate_ del proyecto, se
+Además de las pruebas `e2e` que ya incluye el _boilerplate_ del proyec to, se
 espera que puedas también usar pruebas _unitarias_ para el desarrollo de los
 diferentes _endpoints_ o _rutas_ así como otros módulos internos que decidas
 desarrollar.
