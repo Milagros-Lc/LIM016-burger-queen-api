@@ -9,25 +9,18 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
-  // products: [
-
-  //   {
-  //     productId: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //   },
-  //   {
-  //     qty: {
-  //       type: Number,
-  //       required: true,
-  //     },
-  //   },
-
-  // ],
+  products: [{
+    qty: {
+      type: Number,
+    },
+    productId: {
+      type: String,
+    },
+  }],
 
 }, {
   timestamps: true,
+  versionKey: false,
 });
 
 module.exports = model('Order', orderSchema);
