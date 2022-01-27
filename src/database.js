@@ -5,9 +5,9 @@ mongoose
   .connect(config.dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  });
-//   .then(console.log('exito'))
-//   .catch(console.error);
+  })
+  .then(console.log('exito'))
+  .catch(console.error);
 const { connection } = mongoose;
 
 connection.once('open', () => {
