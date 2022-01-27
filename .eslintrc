@@ -1,11 +1,13 @@
 {
-  "extends": "airbnb-base",
+  //"extends": "airbnb-base",
   "env": {
     "node": true
   },
+  
   "parserOptions": {
     "ecmaVersion": 2018
   },
+  "extends":"eslint:recommended",
   "rules": {
     "no-underscore-dangle": "off",
     "consistent-return": "off",
