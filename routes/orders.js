@@ -2,6 +2,8 @@ const {
   requireAuth,
 } = require('../middleware/auth');
 
+const Order = require('../models/orders');
+
 /** @module orders */
 module.exports = (app, nextMain) => {
   /**
@@ -83,7 +85,17 @@ module.exports = (app, nextMain) => {
    * @code {400} no se indica `userId` o se intenta crear una orden sin productos
    * @code {401} si no hay cabecera de autenticación
    */
-  app.post('/orders', requireAuth, (req, resp, next) => {
+  app.post('/orders', async (req, res) => {
+    const { userId, client } = req.body;
+
+    const newOrder = new Order({
+      userId,
+      client,
+      // products,
+
+    });
+    await newOrder.save();
+    res.json('order recibida');
   });
 
   /**
