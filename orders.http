@@ -1,3 +1,22 @@
 ###
 
-GET http://localhost:8080/orders
+GET http://localhost:8000/orders
+
+
+
+
+###
+
+GET http://localhost:8000/orders/61f2ecec0d6f6ebab386c898
+
+
+
+
+###
+
+DELETE  http://localhost:8000/orders/61f2d7df4560bac5e40eb6a8
+
+###
+
+
+PUT  http://localhost:8000/orders/61f2ecec0d6f6ebab386c898
