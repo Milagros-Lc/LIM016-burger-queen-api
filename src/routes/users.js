@@ -23,15 +23,12 @@ const initAdminUser = async (app, next) => {
       password: "contraseña",
       roles: { admin: true },
     };
-    const user = new User(
-      adminUser,
-    );
+    const user = new User(adminUser);
     console.log("admi creado");
-   return await user.save();
+    return await user.save();
   }
 
-
-console.log("ya existe el admi");
+  console.log("ya existe el admi");
 
   next();
 };
