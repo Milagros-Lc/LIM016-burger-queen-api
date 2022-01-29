@@ -1,0 +1,20 @@
+###
+
+GET http://localhost:8080/products
+
+
+
+###
+POST http://localhost:8080/products
+
+
+###
+GET http://localhost:8080/products/61f537a87353db42068b5e57
+
+
+###
+DELETE http://localhost:8080/products/61f538a54886516f7b33d61b
+
+
+###
+PUT http://localhost:8080/products/61f53b34660779c33e373937
