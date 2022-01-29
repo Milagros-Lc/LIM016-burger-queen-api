@@ -14,13 +14,12 @@ const initAdminUser = async (app, next) => {
 
   // FINISH: se va a crear una usuaria ADMIN
 
-  const userFind = await User.findOne({ email: "correo@gmail" });
-  console.log(adminEmail, adminPassword);
+  const userFind = await User.findOne({ email: adminEmail });
 
   if (!userFind) {
     const adminUser = {
-      email: "correo@gmail",
-      password: "contraseña",
+      email: adminEmail,
+      password: bcrypt.hashSync(adminPassword, 10),
       roles: { admin: true },
     };
     const user = new User(
