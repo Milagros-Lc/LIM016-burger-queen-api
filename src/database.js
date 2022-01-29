@@ -6,11 +6,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(console.log('exito'))
-  .catch(console.error);
-const { connection } = mongoose;
+  .then(() => console.info('Base de datos conectada online'))
+  .catch((err) => console.error(err));
+// const { connection } = mongoose;
 
-connection.once('open', () => {
-  // eslint-disable-next-line no-console
-  console.log('BD is connected');
-});
+// connection.once('open', () => {
+//   // eslint-disable-next-line no-console
+//   console.log('BD is connected');
+// });

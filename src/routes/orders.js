@@ -1,4 +1,3 @@
-const res = require("express/lib/response");
 const { requireAuth } = require("../middleware/auth");
 
 const Order = require("../models/orders");
@@ -32,9 +31,8 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.get("/orders", async (req, resp, next) => {
-
-    const orders=await Order.find();
-    resp.json(orders)
+    const orders = await Order.find();
+    resp.status(200).json(orders);
   });
 
   /**
@@ -59,7 +57,8 @@ module.exports = (app, nextMain) => {
    * @code {404} si la orden con `orderId` indicado no existe
    */
   app.get("/orders/:orderId", async (req, resp, next) => {
-
+    const order = await Order.findById({ _id: req.params.orderId });
+    resp.json(order);
   });
 
   /**
@@ -102,7 +101,7 @@ module.exports = (app, nextMain) => {
       ],
     });
     await newOrder.save();
-    res.json(newOrder);
+    res.status(200).json(newOrder);
   });
 
   /**
@@ -133,7 +132,14 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si la orderId con `orderId` indicado no existe
    */
-  app.put("/orders/:orderId", requireAuth, (req, resp, next) => {});
+  app.put("/orders/:orderId",async (req, resp, next) => {
+
+    const order = await Order.findById(req.params.orderId);
+
+    const orderUpdated = await Order.findByIdAndUpdate(order._id, req.body);
+    return resp.json(orderUpdated);
+    
+  });
 
   /**
    * @name DELETE /orders
@@ -156,7 +162,11 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `orderId` indicado no existe
    */
-  app.delete("/orders/:orderId", requireAuth, (req, resp, next) => {});
+  app.delete("/orders/:orderId", async (req, resp, next) => {
+    const res = await Order.findOne({ _id: req.params.orderId });
+    await Order.findByIdAndDelete({ _id: req.params.orderId });
+    resp.send(res);
+  });
 
   nextMain();
 };
