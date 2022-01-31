@@ -22,9 +22,11 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.1.8"
+    "mongoose": "^6.1.8",
+    "mongoose-paginate-v2": "^1.5.0"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.2.0",
     "docdash": "^1.2.0",
     "eslint": "^8.3.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -33,7 +35,7 @@
     "jest": "^27.0.1",
     "jsdoc": "^3.6.6",
     "jsdoc-http-plugin": "^0.3.2",
-    "node-fetch": "^3.1.0",
+    "node-fetch": "^3.2.0",
     "tree-kill": "^1.2.2"
   }
 }

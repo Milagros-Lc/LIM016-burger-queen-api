@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const res = require("express/lib/response");
 // const {requireAuth} = require('../middleware/auth');
 const Product = require("../models/products");
