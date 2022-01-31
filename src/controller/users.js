@@ -5,23 +5,25 @@ const {getLink, isValidPassword, isValidEmail} = require("../extra/extra");
 module.exports = {
   getUsers: async (req, resp, next) => {
     try{
-      const limit = parseInt(req.query.limit, 10) || 10;
+      const limit = parseInt(req.query.limit, 10) || 4;
       const page = parseInt(req.query.page, 10) || 1;
       console.log(req.protocol)
       console.log(req.headers.host)
       console.log(req.path)
 
       const users = await User.paginate({}, {limit, page});
+      
       const URL = `${req.protocol}://${req.headers.host + req.path}`;
       console.log(URL)
+      console.log(`${URL}?limit=${limit}&page=1`)
+      console.log(page)
 
       const link = getLink(users, URL, page, limit, users.totalPages )
-
       /*La función res.links() se utiliza para unir los enlaces proporcionados como propiedades 
       del parámetro para completar el campo de encabezado HTTP de enlace de la respuesta.*/
       resp.links(link)
 
-      return resp.status(200).json(users.docs);
+      return resp.status(200).json(users);
     } catch (err) {
       next(err)
     }

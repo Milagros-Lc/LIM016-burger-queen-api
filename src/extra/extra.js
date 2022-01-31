@@ -1,10 +1,11 @@
 module.exports.getLink=(res, url, page, limit, total) => {
     const link = { 
-        first: page===1 ? '' : `${url}?limit=${limit}&page=1`,
+        first: page===1 ?  `${url}?limit=${limit}&page=1`: '',
         prev: res.hasPrevPage ? `${url}?limit=${limit}&page=${page - 1}` : '',
         next: res.hasNextPage ? `${url}?limit=${limit}&page=${page + 1}` : '',
-        last: page===total ? '' : `${url}?limit=${limit}&page=${total}`,
+        last: page===total ? `${url}?limit=${limit}&page=${total}` : '',
     }
+    console.log(link)
     return link
 }
 
