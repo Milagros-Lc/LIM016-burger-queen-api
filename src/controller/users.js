@@ -1,7 +1,7 @@
 const User = require("../models/users.js");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
-const {pagination} = require("../utils/utils.js");
+const { pagination } = require("../utils/utils.js");
 
 const getUserByIdOrEmail = async (uid) => {
   if (mongoose.isValidObjectId(uid)) {
@@ -127,13 +127,14 @@ module.exports = {
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-    if (!user.roles.admin || req.authToken.uid !== user._id)
-      return resp
-        .status(403)
-        .json({ message: "no tiene permisos para eliminar al usuario" });
-
-    await User.findByIdAndDelete(user._id);
-    return resp.status(200).json({ message: "usuario elminado" });
+    console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
+    if (req.authToken.uid == user._id || req.authToken.roles.admin) {
+      await User.findByIdAndDelete(user._id);
+      return resp.status(200).json({ message: "usuario elminado" });
+    }
+    return resp
+      .status(403)
+      .json({ message: "no tiene permisos para eliminar al usuario" });
   },
 };
 

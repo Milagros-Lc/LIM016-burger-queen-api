@@ -62,6 +62,7 @@ const createTestUser = () =>
     body: __e2e.testUserCredentials,
   })
     .then((resp) => {
+      console.log(resp.status);
       if (resp.status !== 200) {
         throw new Error("Could not create test user");
       }
@@ -71,6 +72,7 @@ const createTestUser = () =>
       });
     })
     .then((resp) => {
+      console.log(resp.status);
       if (resp.status !== 200) {
         throw new Error("Could not authenticate test user");
       }
@@ -92,7 +94,7 @@ const checkAdminCredentials = () =>
     })
     .then(({ token }) => Object.assign(__e2e, { adminToken: token }));
 
-const waitForServerToBeReady = (retries = 20) =>
+const waitForServerToBeReady = (retries = 50) =>
   new Promise((resolve, reject) => {
     if (!retries) {
       return reject(new Error("Server took to long to start"));
