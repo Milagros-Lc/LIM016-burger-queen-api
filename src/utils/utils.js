@@ -8,3 +8,9 @@ module.exports.pagination = (response, url, page, limit, totalPages) => {
   
     return linkHeader;
   };
+
+
+module.exports.isValidEmail = (email) => (new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)).test(email);
+module.exports.isValidPassword = (password) => password.length >= 5;
+
+//module.exports.isValidPassword = (password) => (new RegExp(/^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/).test(password));

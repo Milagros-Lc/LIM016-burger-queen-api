@@ -1,7 +1,11 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/users.js");
+// const {getLink, isValidPassword, isValidEmail} = require("../extra/extra");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
-const { pagination } = require("../utils/utils.js");
+
+const {pagination, isValidPassword, isValidEmail} = require("../utils/utils.js");
+
 
 const getUserByIdOrEmail = async (uid) => {
   if (mongoose.isValidObjectId(uid)) {
@@ -13,11 +17,10 @@ const getUserByIdOrEmail = async (uid) => {
 };
 
 //El método test() ejecuta la búsqueda de una ocurrencia entre una expresión regular y una cadena especificada. Devuelve true o false.
-const isValidateEmail = (email) => {
-  const emailRegex = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/i;
-  return emailRegex.test(email);
-};
-const isValidatePassword = (password) => password.length >= 5;
+// const isValidateEmail = (email) => {
+//   const emailRegex = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/i;
+//   return emailRegex.test(email);
+// };
 
 module.exports = {
   getUsers: async (req, resp, next) => {
@@ -66,7 +69,7 @@ module.exports = {
     if (!email || !password)
       return resp.status(400).json({ message: "no ingresó  email o password" });
 
-    if (!isValidateEmail(email) || !isValidatePassword(password))
+    if (!isValidEmail(email) || !isValidPassword(password))
       return resp.status(400).json({
         message: "el formato de la conraaseña o email no es correcto",
       });
@@ -127,7 +130,8 @@ module.exports = {
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-    console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
+    // console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
+
     if (req.authToken.uid == user._id || req.authToken.roles.admin) {
       await User.findByIdAndDelete(user._id);
       return resp.status(200).json({ message: "usuario elminado" });
@@ -136,8 +140,35 @@ module.exports = {
       .status(403)
       .json({ message: "no tiene permisos para eliminar al usuario" });
   },
+  
 };
 
 //isValidObjectId()se usa más comúnmente para probar un ID de objeto esperado
 
 //el método parseInt lo convierte a un entero
+
+// createUser: async (req, res, next) => {
+//     try{
+//       const { email, password, roles} = req.body;
+
+//       if (!email || !password) return res.status(400).json({messge: 'Please make sure you have entered the data'})
+
+//       if (!isValidPassword(password) || !isValidEmail(email)) res.status(400).json({messge: `Email or password don't meet the requirements`})
+
+//       //verificar si ya existe el usuario para
+
+//       const existUser = await User.findOne({email})
+
+//       if(existUser) return res.status(403).json({messge: 'User already exist'})
+      
+//       const newUser = new User({ 
+//       email, 
+//       password:bcrypt.hashSync(password, 10), 
+//       roles
+//       });
+//       await newUser.save();
+//       res.status(200).json(newUser);
+//     } catch (err) {
+//       next(err)
+//     }
+//   }

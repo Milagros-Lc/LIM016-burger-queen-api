@@ -62,7 +62,9 @@ const createTestUser = () =>
     body: __e2e.testUserCredentials,
   })
     .then((resp) => {
-      console.log(resp.status);
+
+      console.log(resp.status)
+
       if (resp.status !== 200) {
         throw new Error("Could not create test user");
       }
@@ -72,7 +74,9 @@ const createTestUser = () =>
       });
     })
     .then((resp) => {
+
       console.log(resp.status);
+
       if (resp.status !== 200) {
         throw new Error("Could not authenticate test user");
       }
@@ -109,7 +113,7 @@ const waitForServerToBeReady = (retries = 50) =>
             : resolve()
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           return waitForServerToBeReady(retries - 1).then(resolve, reject)});
     }, 1000);
   });

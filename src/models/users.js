@@ -16,6 +16,7 @@ const userSchema = new Schema(
     roles: {
       admin: {
         type: Boolean,
+        default:false,
       },
     },
   },

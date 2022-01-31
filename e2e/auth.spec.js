@@ -1,4 +1,7 @@
-const config = require('../src/config.js');
+
+const config = require('../src/config');
+
+
 
 const { fetch, fetchWithAuth } = process;
 
