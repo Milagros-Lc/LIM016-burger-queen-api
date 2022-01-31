@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const res = require("express/lib/response");
 const {requireAuth, requireAdmin} = require('../middleware/auth');
 const { getProducts, getOneProduct, createProduct, updateProduct, deleteProduct} = require("../controller/products");

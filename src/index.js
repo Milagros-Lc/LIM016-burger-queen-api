@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const express = require('express');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
