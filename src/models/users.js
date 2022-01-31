@@ -1,6 +1,7 @@
-
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
+const mongoosePaginate = require('mongoose-paginate-v2')
+
 const userSchema = new Schema(
   {
     email: {
@@ -16,6 +17,7 @@ const userSchema = new Schema(
     roles: {
       admin: {
         type: Boolean,
+        default:false,
       },
     },
   }, {
@@ -27,6 +29,8 @@ userSchema.methods.encryptPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return bcrypt.hash(password, salt);
 };
+
+userSchema.plugin(mongoosePaginate)
 
 module.exports = model("User", userSchema);
 

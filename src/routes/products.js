@@ -1,6 +1,7 @@
 const res = require("express/lib/response");
-// const {requireAuth} = require('../middleware/auth');
-const Product = require("../models/products");
+const {requireAuth, requireAdmin} = require('../middleware/auth');
+const { getProducts, getOneProduct, createProduct, updateProduct, deleteProduct} = require("../controller/products");
+// const Product = require("../models/products");
 
 /** @module products */
 module.exports = (app, nextMain) => {
@@ -26,10 +27,7 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  app.get("/products", async (req, resp, next) => {
-    const products = await Product.find();
-    resp.json(products);
-  });
+  app.get("/products",requireAuth, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -48,11 +46,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.get('/products/:productId', async (req, res, next) => {
-    const productId = req.params.productId;
-    const product = await Product.findOne({_id: `${productId}`});
-    res.json(product);
-  });
+  app.get('/products/:productId', requireAuth, getOneProduct);
 
   /**
    * @name POST /products
@@ -76,17 +70,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', async (req, res) => {
-    const { name, price, image, type} = req.body;
-    const newProduct = new Product({ 
-      name,
-      price,
-      image,
-      type
-    });
-    await newProduct.save();
-    res.json(newProduct); 
-  });
+  app.post('/products', requireAdmin, createProduct);
 
   /**
    * @name PUT /products
@@ -111,15 +95,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', async (req, res, next) => {
-    const productId = req.params.productId;
-    const productUpdate = await Product.findOneAndUpdate(
-      {_id: `${productId}`},
-      {$set: req.body},
-      {upsert: true}
-    )
-    res.json(productUpdate);
-  });
+  app.put('/products/:productId',requireAdmin, updateProduct);
 
   /**
    * @name DELETE /products
@@ -139,11 +115,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.delete('/products/:productId', async(req, res, next) => {
-    const productId = req.params.productId;
-    const productDeleted = await Product.findOneAndDelete({_id: `${productId}`});
-    res.json(productDeleted);
-  });
+  app.delete('/products/:productId', requireAdmin, deleteProduct);
 
   nextMain();
 };
