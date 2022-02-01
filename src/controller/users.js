@@ -3,19 +3,21 @@ const User = require("../models/users.js");
 // const {getLink, isValidPassword, isValidEmail} = require("../extra/extra");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
-const {isAdmin}=require('../middleware/auth')
+
 const {
   pagination,
   isValidPassword,
   isValidEmail,
 } = require("../utils/utils.js");
+const { isAdmin } = require("../middleware/auth");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const getUserByIdOrEmail = async (uid) => {
-  if (mongoose.isValidObjectId(uid)) {
-    const user = await User.findById(uid);
+  if (!ObjectId.isValid(uid)) {
+    const user = await User.findOne({ email: `${uid}` });
     return user;
   }
-  const user = await User.findOne({ email: uid });
+  const user = await User.findOne({ _id: `${uid}` });
   return user;
 };
 
@@ -61,11 +63,11 @@ module.exports = {
     if (!user) return resp.status(404);
 
     // {403} si no es ni admin o la misma usuaria
-    // console.log(req.authToken.uid, (user._id).toString());
-    if (user.roles.admin || req.authToken.uid === (user._id).toString()){
+
+    if ( isAdmin(req) || req.authToken.uid === user._id.toString()) {
       return resp.status(200).json(user);
     }
-      
+
     return resp.status(403).json({ message: "no tienes permisos" });
   },
 
@@ -86,45 +88,70 @@ module.exports = {
         .status(403)
         .json({ message: "ya existe un usuario con ese email" });
 
-    const newUser = new User({
+    let newUser = new User({
       email,
       roles,
       password: await User.encryptPassword(password),
     });
 
     await newUser.save();
+    newUser = await User.findOne({ email: email }).select('-password');
     return resp.status(200).json(newUser);
   },
 
   updateUser: async (req, resp, next) => {
-    const { uid } = req.params;
+    try {
+      const uid = req.params.uid;
+      const admin = await isAdmin(req);
+      // console.log(uid)
+      // console.log(req.params.uid)
+      // console.log(ObjectId.isValid(uid))
+      // console.log(admin)
 
-    if (!uid)
-      return resp.status(400).json({ message: "no provee de un id o email" });
-    const user = getUserByIdOrEmail(uid);
+      // resp.status(200).json(user);
+      if (!uid)
+        return resp.status(400).json({ message: "no provee de un id o email" });
 
-    if (!user)
-      return res
-        .status(404)
-        .json({ message: "el usuario solicitado no existe" });
+      const user = await getUserByIdOrEmail(uid);
+      //if(!ObjectId.isValid(uid)) return resp.status(404).json({message:'This product does not exist, please check the Id'})
+      if (!user)
+        return resp
+          .status(404)
+          .json({ message: "el usuario solicitado no existe" });
 
-    if (!req.authToken.roles.admin || user._id !== req.authToken.uid)
-      return resp
-        .status(403)
-        .json({ message: "no tienes permisos para realizar esta operación" });
+      if (req.authToken.uid !== user._id.toString() && !admin) {
+        return resp
+          .status(403)
+          .json({ message: "es necesario ser admin o el dueño del usuario" });
+      }
 
-    if (Object.entries(req.body).length === 0)
-      return resp.status(400).json({ message: "Faltan datos para actualizar" });
+      let { email, password, roles } = req.body;
 
-    const value = mongoose.isValidObjectId(uid) ? { _id: uid } : { email: uid };
+      if (roles && !admin)
+        return resp
+          .status(403)
+          .json({ message: "no tienes permisos para realizar esta operación" });
 
-    const userUpdate = await User.findByIdAndUpdate(
-      value,
-      { $set: req.body },
-      { new: true, useFindAndModify: false }
-    );
+      if (Object.entries(req.body).length === 0)
+        return resp
+          .status(400)
+          .json({ message: "Faltan datos para actualizar" });
 
-    return resp.status(200).json(userUpdate);
+      if (!password) password = user.password;
+      if (!email) email = user.email;
+      if (!roles) roles = user.roles;
+
+      //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
+
+      const userUpdate = await User.findByIdAndUpdate(
+        { _id: `${user._id}` },
+        { email, password: bcrypt.hashSync(password, 10), roles },
+        { new: true, useFindAndModify: false }
+      );
+      return resp.status(200).json(userUpdate);
+    } catch (err) {
+      next(err);
+    }
   },
 
   deleteUser: async (req, resp, next) => {
@@ -136,10 +163,10 @@ module.exports = {
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-    console.log(req.authToken.uid , (user._id).toString() , isAdmin);
 
-    if ((req.authToken.uid === (user._id).toString() )|| isAdmin) {
-      await User.findByIdAndDelete((user._id).toString());
+    if (req.authToken.uid === (user._id).toString() || isAdmin(req)  ) {
+      const id=user._id.toString()
+      await User.deleteOne({_id:id});
       return resp.status(200).json({ message: "usuario elminado" });
     }
     return resp

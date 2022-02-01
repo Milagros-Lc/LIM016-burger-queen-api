@@ -28,24 +28,37 @@ module.exports = (secret) => (req, resp, next) => {
     }
     console.log(decodedToken);
 
-    const userFind = await User.findById(decodedToken.uid);
-    if (!userFind)
-      resp.status(404).json({ message: "no se aha encontrado al usuario" });
+    const userFind =  User.findById(decodedToken.uid);
+    // if (!userFind)
+    //   resp.status(404).json({ message: "no se aha encontrado al usuario" });
 
-    //se va a guardar en el req el decodedToken
-    req.authToken = decodedToken;
-    return next();
+    // //se va a guardar en el req el decodedToken
+    // req.authToken = decodedToken;
+    // return next();
+
+
+    userFind
+    .then((doc) => {
+      if (!doc) {
+        return next(404);
+      }
+      req.authToken = decodedToken;
+
+      return next();
+    })
+    .catch(() => next(403));
+
   });
 };
 
 module.exports.isAuthenticated = (req) =>
   // TODO: decidir por la informacion del request si la usuaria esta autenticada
   // el operador "||" devuelve true si alguno de los operandos es true
- ( req.authToken || false);
+  req.authToken || false;
 
 module.exports.isAdmin = (req) =>
   // TODO: decidir por la informacion del request si la usuaria es admin
- ( req.authToken.roles.admin || false);
+  req.authToken.roles.admin || false;
 
 
 module.exports.requireAuth = (req, resp, next) =>
