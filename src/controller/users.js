@@ -57,10 +57,10 @@ module.exports = {
 
   getUserById: async (req, resp, next) => {
     const { uid } = req.params;
-
+console.log(uid);
     const user = await getUserByIdOrEmail(uid);
 
-    if (!user) return resp.status(404);
+    if (!user) return next(404);
 
     // {403} si no es ni admin o la misma usuaria
 

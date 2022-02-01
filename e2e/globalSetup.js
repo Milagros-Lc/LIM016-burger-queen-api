@@ -134,7 +134,8 @@ module.exports = () =>
       cwd: path.resolve(__dirname, "../"),
       stdio: ["ignore", "pipe", "pipe"],
       env: {
-        PATH: process.env.PATH
+        PATH: process.env.PATH,
+        MONGO_URL:process.env.MONGO_URL
     }
 
     });
