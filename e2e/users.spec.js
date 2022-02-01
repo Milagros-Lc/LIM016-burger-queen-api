@@ -1,6 +1,6 @@
 const url = require('url');
 const qs = require('querystring');
-const config = require('../src/config');
+const config = require('../src/config.js');
 
 const {
   fetch,

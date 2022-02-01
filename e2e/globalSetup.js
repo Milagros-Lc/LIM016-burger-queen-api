@@ -4,7 +4,7 @@ const kill = require("tree-kill");
 const setup = require("@shelf/jest-mongodb/setup");
 const config = require("../src/config.js");
 
-const port = process.env.PORT || 88888;
+const port = process.env.PORT || 8888;
 const baseUrl = process.env.REMOTE_URL || `http://127.0.0.1:${port}`;
 
 const __e2e = {
@@ -62,7 +62,9 @@ const createTestUser = () =>
     body: __e2e.testUserCredentials,
   })
     .then((resp) => {
+
       console.log(resp.status)
+
       if (resp.status !== 200) {
         throw new Error("Could not create test user");
       }
@@ -72,7 +74,9 @@ const createTestUser = () =>
       });
     })
     .then((resp) => {
-      console.log(resp.status)
+
+      console.log(resp.status);
+
       if (resp.status !== 200) {
         throw new Error("Could not authenticate test user");
       }
@@ -94,7 +98,7 @@ const checkAdminCredentials = () =>
     })
     .then(({ token }) => Object.assign(__e2e, { adminToken: token }));
 
-const waitForServerToBeReady = (retries = 20) =>
+const waitForServerToBeReady = (retries = 50) =>
   new Promise((resolve, reject) => {
     if (!retries) {
       return reject(new Error("Server took to long to start"));

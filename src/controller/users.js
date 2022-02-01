@@ -3,9 +3,11 @@ const User = require("../models/users.js");
 // const {getLink, isValidPassword, isValidEmail} = require("../extra/extra");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
+
 const {pagination, isValidPassword, isValidEmail} = require("../utils/utils.js");
 const { isAdmin } = require('../middleware/auth');
 const ObjectId = require('mongoose').Types.ObjectId
+
 
 const getUserByIdOrEmail = async (uid) => {
   if (!ObjectId.isValid(uid)) {
@@ -145,6 +147,7 @@ module.exports = {
       return resp.status(404).json({ message: "el usuario no existe" });
 
     // console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
+
     if (req.authToken.uid == user._id || req.authToken.roles.admin) {
       await User.findByIdAndDelete(user._id);
       return resp.status(200).json({ message: "usuario elminado" });
