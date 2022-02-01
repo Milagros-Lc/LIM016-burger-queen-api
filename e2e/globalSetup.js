@@ -4,7 +4,7 @@ const kill = require("tree-kill");
 const setup = require("@shelf/jest-mongodb/setup");
 const config = require("../src/config.js");
 
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 88888;
 const baseUrl = process.env.REMOTE_URL || `http://127.0.0.1:${port}`;
 
 const __e2e = {

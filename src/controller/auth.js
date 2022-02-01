@@ -8,15 +8,13 @@ module.exports = {
     const { email, password } = req.body;
     if (!email || !password) {
       //  {400} si no se proveen `email` o `password` o ninguno de los dos
-      return resp
-        .status(400)
-        .json({ message: "No ingresaste correo o contraseña" });
+      return resp.status(400).json({ message: "No ingresaste correo o contraseña" });
     }
 
     // TODO: autenticar a la usuarix
     const findUser = await User.findOne({ email: email });
     if (!findUser) {
-      return resp.status(400).json("El usuario no existe");
+      return resp.status(404).json("El usuario no existe");
     }
     const matchPassword = await User.comparePassword(
       password,
