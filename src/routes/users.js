@@ -13,7 +13,7 @@ const initAdminUser = async (app, next) => {
 
   const userFind = await User.findOne({ email: adminEmail });
   if (!userFind) {
-    createAdmi(adminEmail,adminPassword)
+    return createAdmi(adminEmail,adminPassword);
   }
   console.info("ya existe el admi");
   next();
