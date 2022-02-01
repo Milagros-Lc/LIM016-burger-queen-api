@@ -3,9 +3,12 @@ const User = require("../models/users.js");
 // const {getLink, isValidPassword, isValidEmail} = require("../extra/extra");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
-
-const {pagination, isValidPassword, isValidEmail} = require("../utils/utils.js");
-
+const {isAdmin}=require('../middleware/auth')
+const {
+  pagination,
+  isValidPassword,
+  isValidEmail,
+} = require("../utils/utils.js");
 
 const getUserByIdOrEmail = async (uid) => {
   if (mongoose.isValidObjectId(uid)) {
@@ -58,10 +61,12 @@ module.exports = {
     if (!user) return resp.status(404);
 
     // {403} si no es ni admin o la misma usuaria
-    if (!user.roles.admin || req.authToken.uid !== user._id)
-      return resp.status(403).json({ message: "no tienes permisos" });
-
-    return resp.status(200).json(user);
+    // console.log(req.authToken.uid, (user._id).toString());
+    if (user.roles.admin || req.authToken.uid === (user._id).toString()){
+      return resp.status(200).json(user);
+    }
+      
+    return resp.status(403).json({ message: "no tienes permisos" });
   },
 
   postUser: async (req, resp, next) => {
@@ -123,6 +128,7 @@ module.exports = {
   },
 
   deleteUser: async (req, resp, next) => {
+    // console.log(isAdmin, req.authToken.uid ,user._id);
     const { uid } = req.params;
 
     const user = await getUserByIdOrEmail(uid);
@@ -130,17 +136,16 @@ module.exports = {
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-    // console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
+    console.log(req.authToken.uid , (user._id).toString() , isAdmin);
 
-    if (req.authToken.uid == user._id || req.authToken.roles.admin) {
-      await User.findByIdAndDelete(user._id);
+    if ((req.authToken.uid === (user._id).toString() )|| isAdmin) {
+      await User.findByIdAndDelete((user._id).toString());
       return resp.status(200).json({ message: "usuario elminado" });
     }
     return resp
       .status(403)
       .json({ message: "no tiene permisos para eliminar al usuario" });
   },
-  
 };
 
 //isValidObjectId()se usa más comúnmente para probar un ID de objeto esperado
@@ -160,10 +165,10 @@ module.exports = {
 //       const existUser = await User.findOne({email})
 
 //       if(existUser) return res.status(403).json({messge: 'User already exist'})
-      
-//       const newUser = new User({ 
-//       email, 
-//       password:bcrypt.hashSync(password, 10), 
+
+//       const newUser = new User({
+//       email,
+//       password:bcrypt.hashSync(password, 10),
 //       roles
 //       });
 //       await newUser.save();

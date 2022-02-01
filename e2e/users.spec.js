@@ -1,6 +1,6 @@
 const url = require('url');
 const qs = require('querystring');
-const config = require('../src/config.js');
+const config = require('../src/config');
 
 const {
   fetch,
@@ -95,8 +95,12 @@ describe('GET /users/:uid', () => {
   ));
 
   it('should fail with 403 when not owner nor admin', () => (
+    
     fetchAsTestUser(`/users/${config.adminEmail}`)
-      .then((resp) => expect(resp.status).toBe(403))
+    
+      .then((resp) => {console.log(config.adminEmail)
+        return expect(resp.status).toBe(403)})
+      
   ));
 
   it('should fail with 404 when admin and not found', () => (

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const User = require("../models/users.js");
 const { requireAuth, requireAdmin } = require("../middleware/auth");
-const {createAdmi ,getUsers, getUserById, postUser, deleteUser}=require('../controller/users.js')
+const {createAdmi ,getUsers, getUserById, postUser, deleteUser, updateUser}=require('../controller/users.js')
 
 // const { getUsers, createUser } = require("../controller/users");
 
@@ -13,9 +13,9 @@ const initAdminUser = async (app, next) => {
 
   const userFind = await User.findOne({ email: adminEmail });
   if (!userFind) {
-    createAdmi(adminEmail,adminPassword)
+   return createAdmi(adminEmail,adminPassword)
   }
-  console.info("ya existe el admi");
+ console.info("ya existe el admi");
   next();
 };
 
@@ -131,11 +131,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put("/users/:uid", requireAuth, (req, resp, next) => {
-
-
-
-  });
+  app.put("/users/:uid", requireAuth, updateUser);
 
   /**
    * @name DELETE /users
