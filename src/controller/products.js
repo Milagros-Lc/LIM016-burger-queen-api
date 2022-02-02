@@ -64,6 +64,8 @@ module.exports = {
 
             const { name, price, image, type } = req.body;
 
+            if(typeof(price)==='string') return res.status(400).json({message:'The price should be numbers'})
+
             if(name || price || image || type) {
                 const productUpdate = await Product.findOneAndUpdate(
                 {_id: `${productId}`},

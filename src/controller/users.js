@@ -4,17 +4,20 @@ const User = require("../models/users.js");
 const mongoose = require("mongoose");
 const res = require("express/lib/response");
 
-const {pagination, isValidPassword, isValidEmail} = require("../utils/utils.js");
-const { isAdmin } = require('../middleware/auth');
-const ObjectId = require('mongoose').Types.ObjectId
-
+const {
+  pagination,
+  isValidPassword,
+  isValidEmail,
+} = require("../utils/utils.js");
+const { isAdmin } = require("../middleware/auth");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const getUserByIdOrEmail = async (uid) => {
   if (!ObjectId.isValid(uid)) {
-    const user = await User.findOne({email:`${uid}`});
+    const user = await User.findOne({ email: `${uid}` });
     return user;
   }
-  const user = await User.findOne({_id:`${uid}`});
+  const user = await User.findOne({ _id: `${uid}` });
   return user;
 };
 
@@ -54,16 +57,18 @@ module.exports = {
 
   getUserById: async (req, resp, next) => {
     const { uid } = req.params;
-
+console.log(uid);
     const user = await getUserByIdOrEmail(uid);
 
-    if (!user) return resp.status(404);
+    if (!user) return next(404);
 
     // {403} si no es ni admin o la misma usuaria
-    if (!user.roles.admin || req.authToken.uid !== user._id)
-      return resp.status(403).json({ message: "no tienes permisos" });
 
-    return resp.status(200).json(user);
+    if ( isAdmin(req) || req.authToken.uid === user._id.toString()) {
+      return resp.status(200).json(user);
+    }
+
+    return resp.status(403).json({ message: "no tienes permisos" });
   },
 
   postUser: async (req, resp, next) => {
@@ -83,62 +88,74 @@ module.exports = {
         .status(403)
         .json({ message: "ya existe un usuario con ese email" });
 
-    const newUser = new User({
+    let newUser = new User({
       email,
       roles,
       password: await User.encryptPassword(password),
     });
 
     await newUser.save();
+    newUser = await User.findOne({ email: email }).select('-password');
     return resp.status(200).json(newUser);
   },
 
   updateUser: async (req, resp, next) => {
-    try{
+    try {
       const uid = req.params.uid;
-      const admin = await isAdmin(req)
+      const admin = await isAdmin(req);
       // console.log(uid)
       // console.log(req.params.uid)
       // console.log(ObjectId.isValid(uid))
       // console.log(admin)
-      
+
       // resp.status(200).json(user);
-      if (!uid) return resp.status(400).json({ message: "no provee de un id o email" });
+      if (!uid)
+        return resp.status(400).json({ message: "no provee de un id o email" });
 
       const user = await getUserByIdOrEmail(uid);
       //if(!ObjectId.isValid(uid)) return resp.status(404).json({message:'This product does not exist, please check the Id'})
       if (!user)
-        return resp.status(404).json({ message: "el usuario solicitado no existe" });
+        return resp
+          .status(404)
+          .json({ message: "el usuario solicitado no existe" });
 
-      if(req.authToken.uid !== user._id.toString() && !admin) {
-        return resp.status(403).json({ message: "es necesario ser admin o el dueño del usuario"})
+      if (req.authToken.uid !== user._id.toString() && !admin) {
+        return resp
+          .status(403)
+          .json({ message: "es necesario ser admin o el dueño del usuario" });
       }
 
       let { email, password, roles } = req.body;
 
-      if(roles && !admin)  return resp.status(403).json({ message: "no tienes permisos para realizar esta operación" });
+      if (roles && !admin)
+        return resp
+          .status(403)
+          .json({ message: "no tienes permisos para realizar esta operación" });
 
       if (Object.entries(req.body).length === 0)
-        return resp.status(400).json({ message: "Faltan datos para actualizar" });
+        return resp
+          .status(400)
+          .json({ message: "Faltan datos para actualizar" });
 
-      if (!password) (password = user.password);
-      if (!email) (email = user.email);
-      if (!roles) (roles = user.roles);
-      
+      if (!password) password = user.password;
+      if (!email) email = user.email;
+      if (!roles) roles = user.roles;
+
       //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
 
       const userUpdate = await User.findByIdAndUpdate(
-        { _id: `${user._id}`},
-        { email, password: bcrypt.hashSync(password, 10), roles},
+        { _id: `${user._id}` },
+        { email, password: bcrypt.hashSync(password, 10), roles },
         { new: true, useFindAndModify: false }
       );
       return resp.status(200).json(userUpdate);
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
 
   deleteUser: async (req, resp, next) => {
+    // console.log(isAdmin, req.authToken.uid ,user._id);
     const { uid } = req.params;
 
     const user = await getUserByIdOrEmail(uid);
@@ -146,17 +163,16 @@ module.exports = {
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-    // console.log(req.authToken.roles.admin, req.authToken.uid === user._id);
 
-    if (req.authToken.uid == user._id || req.authToken.roles.admin) {
-      await User.findByIdAndDelete(user._id);
+    if (req.authToken.uid === (user._id).toString() || isAdmin(req)  ) {
+      const id=user._id.toString()
+      await User.deleteOne({_id:id});
       return resp.status(200).json({ message: "usuario elminado" });
     }
     return resp
       .status(403)
       .json({ message: "no tiene permisos para eliminar al usuario" });
   },
-  
 };
 
 //isValidObjectId()se usa más comúnmente para probar un ID de objeto esperado
@@ -176,10 +192,10 @@ module.exports = {
 //       const existUser = await User.findOne({email})
 
 //       if(existUser) return res.status(403).json({messge: 'User already exist'})
-      
-//       const newUser = new User({ 
-//       email, 
-//       password:bcrypt.hashSync(password, 10), 
+
+//       const newUser = new User({
+//       email,
+//       password:bcrypt.hashSync(password, 10),
 //       roles
 //       });
 //       await newUser.save();

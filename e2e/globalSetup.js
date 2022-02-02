@@ -98,7 +98,7 @@ const checkAdminCredentials = () =>
     })
     .then(({ token }) => Object.assign(__e2e, { adminToken: token }));
 
-const waitForServerToBeReady = (retries = 50) =>
+const waitForServerToBeReady = (retries = 100) =>
   new Promise((resolve, reject) => {
     if (!retries) {
       return reject(new Error("Server took to long to start"));
@@ -134,7 +134,8 @@ module.exports = () =>
       cwd: path.resolve(__dirname, "../"),
       stdio: ["ignore", "pipe", "pipe"],
       env: {
-        PATH: process.env.PATH
+        PATH: process.env.PATH,
+        MONGO_URL:process.env.MONGO_URL
     }
 
     });
