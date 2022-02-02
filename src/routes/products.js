@@ -96,7 +96,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId',requireAdmin, updateProduct);
+  app.put('/products/:productId', requireAdmin, updateProduct);
 
   /**
    * @name DELETE /products

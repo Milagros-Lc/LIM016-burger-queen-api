@@ -151,7 +151,8 @@ describe('PUT /products/:productid', () => {
         expect(resp.status).toBe(200);
         return resp.json();
       })
-      .then((json) => expect(json.price).toBe(20))
+      .then((json) => {
+        expect(json.price).toBe(20)})
   ));
 });
 
