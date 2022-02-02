@@ -140,7 +140,7 @@ describe('PUT /products/:productid', () => {
       body: { name: 'Test', price: 10 },
     })
       .then((resp) => {
-        expect(resp.status).toBe(200);
+        expect(resp.status).toBe(200)
         return resp.json();
       })
       .then((json) => fetchAsAdmin(`/products/${json._id}`, {
@@ -151,7 +151,8 @@ describe('PUT /products/:productid', () => {
         expect(resp.status).toBe(200);
         return resp.json();
       })
-      .then((json) => expect(json.price).toBe(20))
+      .then((json) => {
+        expect(json.price).toBe(20)})
   ));
 });
 

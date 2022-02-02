@@ -10,7 +10,6 @@ module.exports = {
       
             const products = await Product.paginate({}, {limit, page});
             const URL = `${req.protocol}://${req.headers.host + req.path}`;
-            console.log(URL)
       
             const link = getLink(products, URL, page, limit, products.totalPages )
       
@@ -25,7 +24,6 @@ module.exports = {
     getOneProduct: async (req, res, next) => {
         try{
             const productId = req.params.productId;
-            console.log(ObjectId.isValid(productId))
 
             if(!ObjectId.isValid(productId)) return res.status(404).json({message:'This product does not exist, please check the Id'})
 
@@ -43,6 +41,8 @@ module.exports = {
             const { name, price, image, type} = req.body;
 
             if(!name || !price) return res.status(400).json({ message: 'Please put the name and price'})
+
+            if(typeof(price)==='string') return res.status(400).json({message:'The price should be number'})
 
             const newProduct = new Product({ 
             name,
@@ -64,11 +64,14 @@ module.exports = {
 
             const { name, price, image, type } = req.body;
 
+            if(typeof(price)==='string') return res.status(400).json({message:'The price should be number'})
+
             if(name || price || image || type) {
-                const productUpdate = await Product.findOneAndUpdate(
+                //if(typeof(price)==='string') return res.status(400).json({message:'The price should be numbers'})
+                const productUpdate = await Product.findByIdAndUpdate(
                 {_id: `${productId}`},
-                {$set: req.body},
-                {upsert: true}
+                req.body,
+                { new: true, useFindAndModify: false }
                 )
                 return res.status(200).json(productUpdate);
             }
