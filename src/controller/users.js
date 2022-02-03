@@ -127,6 +127,11 @@ console.log(uid);
 
       let { email, password, roles } = req.body;
 
+      if (!isValidEmail(email) || !isValidPassword(password))
+      return resp.status(400).json({
+        message: "el formato de la conraaseña o email no es correcto",
+      });
+      
       if (roles && !admin)
         return resp
           .status(403)
