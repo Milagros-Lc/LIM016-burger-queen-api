@@ -126,11 +126,6 @@ console.log(uid);
       }
 
       let { email, password, roles } = req.body;
-
-      if (!isValidEmail(email) || !isValidPassword(password))
-      return resp.status(400).json({
-        message: "el formato de la conraaseña o email no es correcto",
-      });
       
       if (roles && !admin)
         return resp
@@ -146,7 +141,10 @@ console.log(uid);
       if (!email) email = user.email;
       if (!roles) roles = user.roles;
 
-      //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
+      if (!isValidEmail(email) || !isValidPassword(password))
+        return resp.status(400).json({
+        message: "el formato de la conraaseña o email no es correcto",
+        })//const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
 
       const userUpdate = await User.findByIdAndUpdate(
         { _id: `${user._id}` },
