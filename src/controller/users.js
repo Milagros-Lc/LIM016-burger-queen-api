@@ -57,14 +57,14 @@ module.exports = {
 
   getUserById: async (req, resp, next) => {
     const { uid } = req.params;
-console.log(uid);
+    console.log(uid);
     const user = await getUserByIdOrEmail(uid);
 
     if (!user) return next(404);
 
     // {403} si no es ni admin o la misma usuaria
 
-    if ( isAdmin(req) || req.authToken.uid === user._id.toString()) {
+    if (isAdmin(req) || req.authToken.uid === user._id.toString()) {
       return resp.status(200).json(user);
     }
 
@@ -95,7 +95,7 @@ console.log(uid);
     });
 
     await newUser.save();
-    newUser = await User.findOne({ email: email }).select('-password');
+    newUser = await User.findOne({ email: email }).select("-password");
     return resp.status(200).json(newUser);
   },
 
@@ -127,11 +127,6 @@ console.log(uid);
 
       let { email, password, roles } = req.body;
 
-      if (!isValidEmail(email) || !isValidPassword(password))
-      return resp.status(400).json({
-        message: "el formato de la conraaseña o email no es correcto",
-      });
-      
       if (roles && !admin)
         return resp
           .status(403)
@@ -147,7 +142,10 @@ console.log(uid);
       if (!roles) roles = user.roles;
 
       //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
-
+      if (!isValidEmail(email) || !isValidPassword(password))
+        return resp.status(400).json({
+          message: "el formato de la conraaseña o email no es correcto",
+        });
       const userUpdate = await User.findByIdAndUpdate(
         { _id: `${user._id}` },
         { email, password: bcrypt.hashSync(password, 10), roles },
@@ -168,10 +166,9 @@ console.log(uid);
     if (!user)
       return resp.status(404).json({ message: "el usuario no existe" });
 
-
-    if (req.authToken.uid === (user._id).toString() || isAdmin(req)  ) {
-      const id=user._id.toString()
-      await User.deleteOne({_id:id});
+    if (req.authToken.uid === user._id.toString() || isAdmin(req)) {
+      const id = user._id.toString();
+      await User.deleteOne({ _id: id });
       return resp.status(200).json({ message: "usuario elminado" });
     }
     return resp
