@@ -57,7 +57,6 @@ module.exports = {
 
   getUserById: async (req, resp, next) => {
     const { uid } = req.params;
-console.log(uid);
     const user = await getUserByIdOrEmail(uid);
 
     if (!user) return next(404);
