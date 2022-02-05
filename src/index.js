@@ -6,6 +6,7 @@ const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('../package.json');
+const cors=require('cors')
 
 const { port, dbUrl, secret } = config;
 const app = express();
@@ -15,6 +16,7 @@ require('./database.js');
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 app.set('config', config);
 app.set('pkg', pkg);
+app.use(cors());
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));

@@ -20,6 +20,10 @@ const productSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  comment:{
+    type:"String",
+    required:false
+  }
 }, {
   timestamps: true,
   versionKey:false,

@@ -19,6 +19,10 @@ const orderSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Product',
       },
+      comment:{
+        type:String,
+        required:false
+      }
     }],
     status: {
       type: String,
