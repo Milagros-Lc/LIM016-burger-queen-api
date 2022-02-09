@@ -48,7 +48,6 @@ describe('POST /orders', () => {
         return resp.json();
       })
       .then((json) => {
-        console.log(json);
         expect(typeof json._id).toBe('string');
         expect(json.client).toBe('client');
         expect(typeof json.dateEntry).toBe('string');
@@ -262,7 +261,6 @@ describe('GET /orders/:orderId', () => {
         return resp.json();
       })
       .then((json) => {
-        console.log(json);
         expect(json.products.length).toBe(1);
         expect(json.products[0].product.name).toBe('Test');
         expect(json.products[0].product.price).toBe(10);
