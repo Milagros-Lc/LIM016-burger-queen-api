@@ -29,7 +29,6 @@ const getUserByIdOrEmail = async (uid) => {
 
 module.exports = {
   getUsers: async (req, resp, next) => {
-    res.header('Access-Control-Allow-Headers', 'Links');
     try {
       const limit = parseInt(req.query.limit) || 10;
       const page = parseInt(req.query.page) || 1;
