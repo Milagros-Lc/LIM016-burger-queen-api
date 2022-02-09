@@ -29,6 +29,7 @@ const getUserByIdOrEmail = async (uid) => {
 
 module.exports = {
   getUsers: async (req, resp, next) => {
+    res.header('Access-Control-Allow-Headers', 'Links');
     try {
       const limit = parseInt(req.query.limit) || 10;
       const page = parseInt(req.query.page) || 1;
@@ -37,6 +38,7 @@ module.exports = {
       const url = `${req.protocol}://${req.get("host") + req.path}`;
 
       const links = pagination(users, url, page, limit, users.totalPages);
+
       resp.links(links);
       resp.status(200).json(users.docs);
     } catch (error) {
