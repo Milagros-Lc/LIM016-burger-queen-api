@@ -12,7 +12,7 @@ const { port, dbUrl, secret } = config;
 const app = express();
 
 const corsOptions = {
-  exposedHeaders: 'Links'
+  exposedHeaders: 'Link'
 }
 
 require('./database.js');
