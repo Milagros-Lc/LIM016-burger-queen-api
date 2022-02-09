@@ -6,7 +6,8 @@ module.exports.pagination = (response, url, page, limit, totalPages) => {
       last: `${url}?limit=${limit}&page=${totalPages}`,
     };
   
-    return linkHeader;
+    return JSON.stringify(linkHeader)
+    ;
   };
 
 
