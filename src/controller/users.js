@@ -37,7 +37,6 @@ module.exports = {
       const url = `${req.protocol}://${req.get("host") + req.path}`;
 
       const links = pagination(users, url, page, limit, users.totalPages);
-
       resp.links(links);
       resp.status(200).json(users.docs);
     } catch (error) {
