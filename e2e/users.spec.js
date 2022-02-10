@@ -158,7 +158,6 @@ describe("GET /users/:uid", () => {
 
   it("should fail with 403 when not owner nor admin", () =>
     fetchAsTestUser(`/users/${config.adminEmail}`).then((resp) => {
-      console.log(config.adminEmail);
       return expect(resp.status).toBe(403);
     }));
 

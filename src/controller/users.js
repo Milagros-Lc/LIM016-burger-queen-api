@@ -57,7 +57,6 @@ module.exports = {
 
   getUserById: async (req, resp, next) => {
     const { uid } = req.params;
-    console.log(uid);
     const user = await getUserByIdOrEmail(uid);
 
     if (!user) return next(404);
@@ -72,31 +71,35 @@ module.exports = {
   },
 
   postUser: async (req, resp, next) => {
-    const { email, password, roles } = req.body;
-    if (!email || !password)
-      return resp.status(400).json({ message: "no ingresó  email o password" });
+    try {
+      const { email, password, roles } = req.body;
+      if (!email || !password)
+        return resp.status(400).json({ message: "no ingresó  email o password" });
 
-    if (!isValidEmail(email) || !isValidPassword(password))
-      return resp.status(400).json({
-        message: "el formato de la conraaseña o email no es correcto",
+      if (!isValidEmail(email) || !isValidPassword(password))
+        return resp.status(400).json({
+          message: "el formato de la conraaseña o email no es correcto",
+        });
+
+      const userFind = await User.findOne({ email: email });
+
+      if (userFind)
+        return resp
+          .status(403)
+          .json({ message: "ya existe un usuario con ese email" });
+
+      let newUser = new User({
+        email,
+        roles,
+        password: await User.encryptPassword(password),
       });
 
-    const userFind = await User.findOne({ email: email });
-
-    if (userFind)
-      return resp
-        .status(403)
-        .json({ message: "ya existe un usuario con ese email" });
-
-    let newUser = new User({
-      email,
-      roles,
-      password: await User.encryptPassword(password),
-    });
-
-    await newUser.save();
-    newUser = await User.findOne({ email: email }).select("-password");
-    return resp.status(200).json(newUser);
+      await newUser.save();
+      newUser = await User.findOne({ email: email }).select("-password");
+      return resp.status(200).json(newUser);
+    } catch (e) {
+      next(e)
+    }
   },
 
   updateUser: async (req, resp, next) => {
@@ -126,7 +129,7 @@ module.exports = {
       }
 
       let { email, password, roles } = req.body;
-
+      
       if (roles && !admin)
         return resp
           .status(403)
@@ -158,22 +161,23 @@ module.exports = {
   },
 
   deleteUser: async (req, resp, next) => {
-    // console.log(isAdmin, req.authToken.uid ,user._id);
-    const { uid } = req.params;
+    try {
+      const { uid } = req.params;
 
-    const user = await getUserByIdOrEmail(uid);
+      const user = await getUserByIdOrEmail(uid);
 
-    if (!user)
-      return resp.status(404).json({ message: "el usuario no existe" });
+      if (!user)
+        return resp.status(404).json({ message: "el usuario no existe" });
 
-    if (req.authToken.uid === user._id.toString() || isAdmin(req)) {
-      const id = user._id.toString();
-      await User.deleteOne({ _id: id });
-      return resp.status(200).json({ message: "usuario elminado" });
+      if (req.authToken.uid === user._id.toString() || isAdmin(req)) {
+        const id = user._id.toString();
+        const userd = await User.findOneAndDelete({ _id: `${id}` })
+        return resp.status(200).json(userd);
+      }
+      return resp.status(403).json({ message: "no tiene permisos para eliminar al usuario" });
+    } catch(e) {
+      next(e)
     }
-    return resp
-      .status(403)
-      .json({ message: "no tiene permisos para eliminar al usuario" });
   },
 };
 
