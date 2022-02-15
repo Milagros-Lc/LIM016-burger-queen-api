@@ -27,6 +27,10 @@ const userSchema = new Schema(
     image:{
       type:String,
       required:false
+    },
+    nameUser:{
+      type:String,
+      required:false
     }
   },
   {
