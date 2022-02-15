@@ -7,9 +7,5 @@ mongoose
   })
   .then(() => console.info('Base de datos conectada online'))
   .catch((err) => console.error(err));
-// const { connection } = mongoose;
 
-mongoose.connection.once('open', () => {
-  // eslint-disable-next-line no-console
-  console.log('BD is connected');
-});
+
