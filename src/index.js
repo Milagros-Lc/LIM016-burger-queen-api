@@ -11,12 +11,16 @@ const cors=require('cors')
 const { port, dbUrl, secret } = config;
 const app = express();
 
+const corsOptions = {
+  exposedHeaders: 'Link'
+}
+
 require('./database.js');
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 app.set('config', config);
 app.set('pkg', pkg);
-app.use(cors());
+app.use(cors(corsOptions));
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));

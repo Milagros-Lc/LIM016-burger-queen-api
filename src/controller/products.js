@@ -1,6 +1,7 @@
 const Product = require("../models/products");
 const {getLink} = require("../extra/extra");
 const ObjectId = require('mongoose').Types.ObjectId
+const {pagination} = require("../utils/utils.js");
 
 module.exports = {
     getProducts:  async (req, resp, next) => {
@@ -11,7 +12,7 @@ module.exports = {
             const products = await Product.paginate({}, {limit, page});
             const URL = `${req.protocol}://${req.headers.host + req.path}`;
       
-            const link = getLink(products, URL, page, limit, products.totalPages )
+            const link = pagination(products, URL, page, limit, products.totalPages )
       
             /*La función res.links() se utiliza para unir los enlaces proporcionados como propiedades 
             del parámetro para completar el campo de encabezado HTTP de enlace de la respuesta.*/
