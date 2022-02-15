@@ -3,6 +3,12 @@ const bcrypt = require("bcryptjs");
 const mongoosePaginate=require('mongoose-paginate-v2')
 const userSchema = new Schema(
   {
+    name:{
+      type:String,
+      required:true,
+      unique:false
+    }
+    ,
     email: {
       type: String,
       required: [true, "El nombre es obligatorio"],
