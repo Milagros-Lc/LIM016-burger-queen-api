@@ -92,6 +92,8 @@ module.exports = {
         email,
         roles,
         password: await User.encryptPassword(password),
+        nameUser,
+        image
       });
 
       await newUser.save();
@@ -128,7 +130,7 @@ module.exports = {
           .json({ message: "es necesario ser admin o el dueño del usuario" });
       }
 
-      let { email, password, roles } = req.body;
+      let { email, password, roles , nameUser,image} = req.body;
       
       if (roles && !admin)
         return resp
@@ -143,7 +145,8 @@ module.exports = {
       if (!password) password = user.password;
       if (!email) email = user.email;
       if (!roles) roles = user.roles;
-
+      if (!image) image = user.image;
+      if (!nameUser) nameUser = user.nameUser;
       //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
       if (!isValidEmail(email) || !isValidPassword(password))
         return resp.status(400).json({
@@ -151,7 +154,7 @@ module.exports = {
         });
       const userUpdate = await User.findByIdAndUpdate(
         { _id: `${user._id}` },
-        { email, password: bcrypt.hashSync(password, 10), roles },
+        { email, password: bcrypt.hashSync(password, 10), roles , image,nameUser},
         { new: true, useFindAndModify: false }
       );
       return resp.status(200).json(userUpdate);
