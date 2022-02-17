@@ -72,7 +72,7 @@ module.exports = {
 
   postUser: async (req, resp, next) => {
     try {
-      const { email, password, roles } = req.body;
+      const { email, password, roles, nameUser,image } = req.body;
       if (!email || !password)
         return resp.status(400).json({ message: "no ingresó  email o password" });
 
