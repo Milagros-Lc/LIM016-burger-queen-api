@@ -14,14 +14,14 @@ module.exports = {
     // TODO: autenticar a la usuarix
     const findUser = await User.findOne({ email: email });
     if (!findUser) {
-      return resp.status(404).json("El usuario no existe");
+      return resp.status(404).json({ message: "El usuario no existe" });
     }
     const matchPassword = await User.comparePassword(
       password,
       findUser.password
     );
 
-    if (!matchPassword) return resp.status(404).json({ token: "null" });
+    if (!matchPassword) return resp.status(404).json({  message: "La contraseña es incorrecta, intente de nuevo" });
 
     const token = jwt.sign(
       { uid: findUser._id, email: findUser.email, roles: findUser.roles },
