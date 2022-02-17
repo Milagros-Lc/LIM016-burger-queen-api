@@ -43,7 +43,9 @@ module.exports = {
         products: products.map((product) => ({
           qty: product.qty,
           product: product.productId,
+          comment:product.comment
         })),
+
       });
       const order = await newOrder.save();
       const orderUpdate = await Order.findOne({ _id: order._id }).populate(
