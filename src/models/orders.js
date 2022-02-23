@@ -40,7 +40,12 @@ const orderSchema = new Schema(
       required: false,
       default: Date.now,
     },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
   }
+  
 );
 
 orderSchema.plugin(mongoosePaginate);
