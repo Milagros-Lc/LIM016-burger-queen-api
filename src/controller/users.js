@@ -142,7 +142,12 @@ module.exports = {
           .status(400)
           .json({ message: "Faltan datos para actualizar" });
 
-      if (!password) password = user.password;
+      if (!password) {
+         password = user.password;
+      }else{
+        password =  bcrypt.hashSync(password, 10)
+      }
+     
       if (!email) email = user.email;
       if (!roles) roles = user.roles;
       if (!image) image = user.image;
@@ -150,11 +155,11 @@ module.exports = {
       //const value = ObjectId.isValid(uid) ? { _id: uid } : { email: uid };
       if (!isValidEmail(email) || !isValidPassword(password))
         return resp.status(400).json({
-          message: "el formato de la conraaseña o email no es correcto",
+          message: "el formato de la contraseña o email no es correcto",
         });
       const userUpdate = await User.findByIdAndUpdate(
         { _id: `${user._id}` },
-        { email, password: bcrypt.hashSync(password, 10), roles , image,nameUser},
+        { email, password, roles , image,nameUser},
         { new: true, useFindAndModify: false }
       );
       return resp.status(200).json(userUpdate);
