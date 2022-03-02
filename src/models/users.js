@@ -1,52 +1,62 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
-const mongoosePaginate=require('mongoose-paginate-v2')
-const userSchema = new Schema(
-  {
-    nameUser:{
-      type:String,
-      required:false
+const mongoosePaginate = require('mongoose-paginate-v2')
+const userSchema = new Schema({
+    nameUser: {
+        type: String,
+        /*    required:false*/
+        required: false,
     },
     email: {
-      type: String,
-      required: [true, "El nombre es obligatorio"],
-      unique: true,
-      index: true, // acelera busqueda
+        type: String,
+        required: [true, "El nombre es obligatorio"],
+        unique: true,
+        index: true, // acelera busqueda
     },
     password: {
-      type: String,
-      required: [true, "La contraseña es obligatoria"],
+        type: String,
+        required: [true, "La contraseña es obligatoria"],
     },
     roles: {
-      admin: {
+        /*   admin: {
         type: Boolean,
         default:false,
       },
       name: {
-        type: String,
+        type:  ,
         required: false,
       }
-  
+   */
+        admin: {
+            type: Boolean,
+            default: false,
+        },
+        waiter: {
+            type: Boolean,
+            default: false,
+        },
+        cook: {
+            type: Boolean,
+            default: false,
+        }
     },
-    image:{
-      type:String,
-      required:false
+    image: {
+        type: String,
+        required: false,
     },
-  },
-  {
+}, {
     timestamps: true,
     versionKey: false,
-  }
-);
+});
 
-userSchema.statics.encryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
+userSchema.statics.encryptPassword = async(password) => {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
 };
 
 //me retorna un boleano
-userSchema.statics.comparePassword = async (password, receivedPassword) => {
-  return await bcrypt.compare(password, receivedPassword);
+userSchema.statics.comparePassword = async(password, receivedPassword) => {
+    return await bcrypt.compare(password, receivedPassword);
 };
 
 userSchema.plugin(mongoosePaginate)
