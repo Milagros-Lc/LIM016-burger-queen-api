@@ -46,12 +46,9 @@ module.exports = {
 
     createAdmi: async(adminEmail, adminPassword) => {
         const adminUser = {
-            nameUser: 'Maria',
             email: adminEmail,
             password: await User.encryptPassword(adminPassword),
             roles: { admin: true },
-            ////////////
-            image: '',
         };
         const user = new User(adminUser);
         console.info("admi creado");
