@@ -61,19 +61,21 @@ const orderSchema = new Schema({
         additional: {
             type: String,
             default: "",
-
         },
         totalQty: {
             type: Number,
-            required: false,
+            default: 0,
+
         },
         total: {
             type: Number,
-            required: false,
+            default: 0,
+
         },
         numberTable: {
             type: Number,
-            required: false,
+            default: 1,
+
         },
     }, {
         timestamps: true,
