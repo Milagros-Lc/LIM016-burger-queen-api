@@ -11,23 +11,18 @@ const orderSchema = new Schema({
             type: String,
         },
         products: [{
-             qty: {
+            qty: { //qty por  producto
               type: Number,
               default: 0,
             }, 
-            product: {
+            productId: {
                 type: Schema.Types.ObjectId,
                 ref: 'Product',
             },
-            /*  comment:{
-               type:String,
-               required:false
-             } */
         }],
         status: {
             type: String,
             default: "pending",
-
         },
         dateEntry: {
             type: Date,
@@ -56,7 +51,6 @@ const orderSchema = new Schema({
         timeResult: {
             type: String,
             default: "",
-
         },
         additional: {
             type: String,
@@ -65,7 +59,6 @@ const orderSchema = new Schema({
         totalQty: {
             type: Number,
             default: 0,
-
         },
         total: {
             type: Number,
