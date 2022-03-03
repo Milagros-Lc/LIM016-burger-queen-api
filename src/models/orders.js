@@ -55,23 +55,28 @@ const orderSchema = new Schema({
         timeResult: {
             type: String,
             default: "",
+            required: false,
         },
         additional: {
             type: String,
             default: "",
+            required: false,
         },
         totalQty: {
             type: Number,
             default: 0,
+            required: false,
         },
         total: {
             type: Number,
             default: 0,
+            required: false,
 
         },
         numberTable: {
             type: Number,
             default: 1,
+            required: false,
 
         },
     }, {
