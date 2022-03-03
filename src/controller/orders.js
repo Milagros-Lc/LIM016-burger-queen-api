@@ -42,7 +42,7 @@ module.exports = {
                 userId,
                 client,
                 products: products.map((product) => ({
-                    //qty: product.qty,
+                    qty: product.qty,
                     product: product.productId,
                     //comment:product.comment
                 })),
