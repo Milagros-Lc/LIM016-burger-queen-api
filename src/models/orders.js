@@ -29,28 +29,28 @@ const orderSchema = new Schema({
             default: "pending",
         },
         dateEntry: {
-            type: Date,
-            default: Date.now,
+            type: String,
+            default: "",
         },
         dateProcessed: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateDelivering: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateDone: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateCanceled: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         timeResult: {
             type: String,
