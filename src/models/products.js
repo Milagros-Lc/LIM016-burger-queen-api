@@ -33,9 +33,11 @@ const productSchema = new Schema({
     },
     qty: {
         type: Number,
+        required: false,
     },
     subTotal: {
         type: Number,
+        required: false,
     },
     messageCard: {
         type: String,
