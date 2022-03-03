@@ -36,18 +36,36 @@ module.exports = {
     },
     postOrder: async(req, res, next) => {
         try {
-            const { userId, client, products } = req.body;
+            const { userId, client, products, timeResult,
+                additional,
+                totalQty,
+                total,
+                numberTable,
+                dateEntry,
+                dateProcessed,
+                dateDelivering,
+                dateDone,
+                dateCanceled } = req.body;
             if (!products || products.length === 0) return next(400);
             const newOrder = new Order({
                 userId,
                 client,
                 products: products.map((product) => ({
-                    //qty: product.qty,
+                    qty: product.qty,
                     product: product.productId,
+                    subTotal: product.subTotal
                     //comment:product.comment
                 })),
-
-
+                timeResult,
+                additional,
+                totalQty,
+                total,
+                numberTable,
+                dateEntry,
+                dateProcessed,
+                dateDelivering,
+                dateDone,
+                dateCanceled,
             });
             const order = await newOrder.save();
             const orderUpdate = await Order.findOne({ _id: order._id }).populate(

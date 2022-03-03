@@ -39,7 +39,7 @@ module.exports = {
     },
     createProduct: async(req, res, next) => {
         try {
-            const { name, price, image, type, qty, subTotal, messageCard } = req.body;
+            const { name, price, image, type, messageCard } = req.body;
 
             if (!name || !price) return res.status(400).json({ message: 'Please put the name and price' })
 
@@ -50,8 +50,6 @@ module.exports = {
                 price,
                 image,
                 type,
-                qty,
-                subTotal,
                 messageCard
             });
             await newProduct.save();

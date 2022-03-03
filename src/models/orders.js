@@ -11,70 +11,72 @@ const orderSchema = new Schema({
             type: String,
         },
         products: [{
-            /* qty: {
+            qty: { //qty por  producto
               type: Number,
               default: 0,
-            }, */
+            }, 
+            subTotal: {
+                type: Number,
+                required: false,
+             },
             product: {
                 type: Schema.Types.ObjectId,
                 ref: 'Product',
             },
-            /*  comment:{
-               type:String,
-               required:false
-             } */
         }],
         status: {
             type: String,
             default: "pending",
-
         },
         dateEntry: {
-            type: Date,
-            default: Date.now,
+            type: String,
+            default: "",
         },
         dateProcessed: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateDelivering: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateDone: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         dateCanceled: {
-            type: Date,
+            type: String,
             required: false,
-            default: Date.now,
+            default: "",
         },
         timeResult: {
             type: String,
             default: "",
-
+            required: false,
         },
         additional: {
             type: String,
             default: "",
+            required: false,
         },
         totalQty: {
             type: Number,
             default: 0,
-
+            required: false,
         },
         total: {
             type: Number,
             default: 0,
+            required: false,
 
         },
         numberTable: {
             type: Number,
             default: 1,
+            required: false,
 
         },
     }, {
