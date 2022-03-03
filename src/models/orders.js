@@ -15,6 +15,10 @@ const orderSchema = new Schema({
               type: Number,
               default: 0,
             }, 
+            subTotal: {
+                type: Number,
+                required: false,
+             },
             product: {
                 type: Schema.Types.ObjectId,
                 ref: 'Product',

@@ -31,14 +31,14 @@ const productSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    qty: {
-        type: Number,
-        required: false,
-    },
-    subTotal: {
-        type: Number,
-        required: false,
-    },
+    // qty: {
+    //     type: Number,
+    //     required: false,
+    // },
+    // subTotal: {
+    //     type: Number,
+    //     required: false,
+    // },
     messageCard: {
         type: String,
         required: false

@@ -44,6 +44,7 @@ module.exports = {
                 products: products.map((product) => ({
                     qty: product.qty,
                     product: product.productId,
+                    subTotal: product.subTotal
                     //comment:product.comment
                 })),
 
